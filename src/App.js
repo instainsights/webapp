@@ -1,36 +1,85 @@
-/* eslint-disable no-use-before-define */
-import React from 'react';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+/* eslint-disable no-use-before-define */ 
+import React from 'react'; 
+import TextField from '@material-ui/core/TextField'; 
+import Autocomplete, {createFilterOptions} from '@material-ui/lab/Autocomplete';
 
-export default function FreeSolo() {
+const filter = createFilterOptions();
+
+export default function FreeSoloCreateOption() {
+  const [value, setValue] = React.useState(null);
+
   return (
-    <div style={{ width: 300 }}>
-      <Autocomplete
-        id="free-solo-demo"
-        freeSolo
-        options={top100Films.map((option) => option.title)}
-        renderInput={(params) => (
-          <TextField {...params} label="freeSolo" margin="normal" variant="outlined" />
-        )}
-      />
-      <Autocomplete
-        freeSolo
-        id="free-solo-2-demo"
-        disableClearable
-        options={top100Films.map((option) => option.title)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Search input"
-            margin="normal"
-            variant="outlined"
-            InputProps={{ ...params.InputProps, type: 'search' }}
-          />
-        )}
-      />
-    </div>
+    <Autocomplete
+      value={value}
+      onChange={(event, newValue) => {
+        if (newValue && newValue.inputValue) {
+          setValue({
+            title: newValue.inputValue,
+          });
+
+          return;
+        }
+
+        setValue(newValue);
+      }}
+
+    filterOptions={(options, params) => {
+        const filtered = filter(options, params);
+
+        if (params.inputValue !== '') {
+          filtered.push({
+            inputValue: params.inputValue,
+            title: `Add "${params.inputValue}"`,
+          });
+        }
+
+        return filtered;
+      }}
+      id="free-solo-with-text-demo"
+      options={top100Films}
+
+      let response = {fetch('http://localhost:3000/api/suggest?q=Jonathan+Bruce')}
+      let text = {response.text()}
+
+      test = {postData('http://localhost:3000/api/suggest?q', { answer: 42 })
+         .then((data) => {
+    		console.log(data); // JSON data parsed by `response.json()` call
+  	})}
+
+      getOptionLabel={(option) => {
+        // e.g value selected with enter, right from the input
+        if (typeof option === 'string') {
+          return option;
+        }
+        if (option.inputValue) {
+          return option.inputValue;
+        }
+        return option.title;
+      }}
+      renderOption={(option) => option.title}
+      style={{ width: 300 }}
+      freeSolo
+      renderInput={(params) => (
+       <TextField {...params} label="Free solo with text demo" variant="outlined" />
+      )}
+    />
   );
+}
+
+async function postData(url = '', data = {}) {
+	const response = await fetch(url, {
+    		method: 'POST',
+    		mode: 'cors', 
+    		cache: 'default',
+    		credentials: 'same-origin', 
+    		headers: {
+      			'Content-Type': 'text/html; charset=utf-8'
+    		},
+    		redirect: 'follow',
+    		referrerPolicy: 'no-referrer', 
+		body: data
+  	});
+  	return response.text(); 
 }
 
 // Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top
