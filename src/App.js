@@ -36,15 +36,18 @@ export default function FreeSoloCreateOption() {
         return filtered;
       }}
       id="free-solo-with-text-demo"
-      options={top100Films}
 
-      let response = {fetch('http://localhost:3000/api/suggest?q=Jonathan+Bruce')}
-      let text = {response.text()}
+      // need a lambda function here!
+      //options={top100Films}
+      options={postData('http://localhost:3000/api/suggest2?q=init')}
 
-      test = {postData('http://localhost:3000/api/suggest?q', { answer: 42 })
-         .then((data) => {
-    		console.log(data); // JSON data parsed by `response.json()` call
-  	})}
+      //let response = {fetch('http://localhost:3000/api/suggest?q=Jonathan+Bruce')}
+      //let text = {response.text()}
+
+      //test = {postData('http://localhost:3000/api/suggest?q', { answer: 42 })
+      //   .then((data) => {
+    	//	console.log(data); // JSON data parsed by `response.json()` call
+  	//})}
 
       getOptionLabel={(option) => {
         // e.g value selected with enter, right from the input
@@ -60,7 +63,7 @@ export default function FreeSoloCreateOption() {
       style={{ width: 300 }}
       freeSolo
       renderInput={(params) => (
-       <TextField {...params} label="Free solo with text demo" variant="outlined" />
+       <TextField {...params} label="Instainsights.io Demo" variant="outlined" />
       )}
     />
   );
