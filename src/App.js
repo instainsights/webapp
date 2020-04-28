@@ -11,8 +11,11 @@ export default function FreeSoloCreateOption() {
   return (
     <Autocomplete
       value={value}
+      autoComplete={true}
       onChange={(event, newValue) => {
         if (newValue && newValue.inputValue) {
+          console.log('onChange:' + newValue.inputValue)
+          postData('http://localhost:3000/api/suggest2?q=' + newValue.inputValue)
           setValue({
             title: newValue.inputValue,
           });
@@ -25,6 +28,7 @@ export default function FreeSoloCreateOption() {
 
     filterOptions={(options, params) => {
         const filtered = filter(options, params);
+        console.log('filtered:'+filtered.toString)
 
         if (params.inputValue !== '') {
           filtered.push({
@@ -35,19 +39,13 @@ export default function FreeSoloCreateOption() {
 
         return filtered;
       }}
-      id="free-solo-with-text-demo"
+      id="Instainsights"
 
-      // need a lambda function here!
-      //options={top100Films}
-      options={postData('http://localhost:3000/api/suggest2?q=init')}
+      options={top100Films}
+      options2={[
+        postData('http://localhost:3000/api/suggest2?q=init')
+      ]}
 
-      //let response = {fetch('http://localhost:3000/api/suggest?q=Jonathan+Bruce')}
-      //let text = {response.text()}
-
-      //test = {postData('http://localhost:3000/api/suggest?q', { answer: 42 })
-      //   .then((data) => {
-    	//	console.log(data); // JSON data parsed by `response.json()` call
-  	//})}
 
       getOptionLabel={(option) => {
         // e.g value selected with enter, right from the input
@@ -58,8 +56,11 @@ export default function FreeSoloCreateOption() {
           return option.inputValue;
         }
         return option.title;
+        //return option.object;
       }}
       renderOption={(option) => option.title}
+      //renderOption={(option) => option.object}
+
       style={{ width: 300 }}
       freeSolo
       renderInput={(params) => (
@@ -82,7 +83,7 @@ async function postData(url = '', data = {}) {
     		referrerPolicy: 'no-referrer', 
 		body: data
   	});
-  	return response.text(); 
+  	return response.json(); 
 }
 
 // Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top
