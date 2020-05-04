@@ -43,8 +43,9 @@ export default function FreeSoloCreateOption() {
 
       options={top100Films}
       options2={[
-        postData('http://localhost:3000/api/suggest2?q=init')
+        postData('http://localhost:3000/api/suggest2?q='+params.inputValue)
       ]}
+      // the response to this should be our list of suggested entities
 
 
       getOptionLabel={(option) => {
